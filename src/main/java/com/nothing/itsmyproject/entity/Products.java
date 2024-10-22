@@ -4,31 +4,30 @@ package com.nothing.itsmyproject.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
 
 @Entity
 @Table(name = "products")
 public class Products {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "product_id")
   private Long productId;
 
-  @Column(name = "product_name")
+  @Column(name = "product_name", nullable = false)
   private String productName;
 
-  @Column(name = "product_price")
+  @Column(name = "product_price", nullable = false)
   private double productPrice;
 
-  @Column(name = "product_quantity")
+  @Column(name = "product_quantity", nullable = false)
   private int productQuantity;
 
-  @Column(name = "decription")
-  private String decription;
+  @Column(name = "description")
+  private String description;
 
   // Getters and Setters
   public Long getProductId() {
@@ -63,23 +62,11 @@ public class Products {
     this.productQuantity = productQuantity;
   }
 
-  public String getDecription() {
-    return decription;
+  public String getDescription() {
+    return description;
   }
 
-  public void setDecription(String decription) {
-    this.decription = decription;
-  }
-
-  // toString
-  @Override
-  public String toString() {
-    return "Products{" +
-        "productId=" + productId +
-        ", productName='" + productName + '\'' +
-        ", productPrice=" + productPrice +
-        ", productQuantity=" + productQuantity +
-        ", decription='" + decription + '\'' +
-        '}';
+  public void setDescription(String description) {
+    this.description = description;
   }
 }
