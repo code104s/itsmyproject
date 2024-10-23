@@ -1,7 +1,7 @@
 package com.nothing.itsmyproject.controller;
 
 import com.nothing.itsmyproject.entity.Products;
-import com.nothing.itsmyproject.service.ProductsService;
+import com.nothing.itsmyproject.service.impl.ProductsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,7 +15,7 @@ import java.util.Optional;
 public class ProductsController {
 
   @Autowired
-  private ProductsService productsService;
+  private ProductsServiceImpl productsService;
 
   @GetMapping
   public List<Products> getAllProducts(@AuthenticationPrincipal String username) {

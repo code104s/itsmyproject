@@ -21,7 +21,7 @@ public class AuthController {
   private AuthenticationManager authenticationManager;
 
   @Autowired
-  private CustomUserDetailService userDetailsService;
+  private CustomUserDetailService customUserDetailService;
 
   @Autowired
   private JwtUtils jwtUtil;
@@ -36,7 +36,7 @@ public class AuthController {
       return ResponseEntity.status(401).body("Incorrect username or password");
     }
 
-    final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+    final UserDetails userDetails = customUserDetailService.loadUserByUsername(authenticationRequest.getUsername());
     final String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
     return ResponseEntity.ok(new AuthenticationResponse(jwt));
@@ -44,7 +44,7 @@ public class AuthController {
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@RequestBody User user) {
-    userDetailsService.saveUser(user);
+    customUserDetailService.saveUser(user);
     return ResponseEntity.ok("User registered successfully");
   }
 }
