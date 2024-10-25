@@ -20,8 +20,9 @@ public class ProductsServiceImpl implements ProductsService {
 
   @Cacheable(value = "products")
   public List<Products> getAllProducts() {
-    System.out.println("Fetching all products..." + productRepository.findAll());
-    return productRepository.findAll();
+    List<Products> products = productRepository.findAll();
+    System.out.println("Number of products fetched: " + products.size());
+    return products;
   }
 
   @Cacheable(value = "products", key = "#id")

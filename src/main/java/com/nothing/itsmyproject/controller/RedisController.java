@@ -1,29 +1,23 @@
 package com.nothing.itsmyproject.controller;
 
-
-import com.nothing.itsmyproject.service.BaseRedisService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/redis")
-@RequiredArgsConstructor
 public class RedisController {
 
-  private final BaseRedisService baseRedisService;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
-  @RequestMapping("/set")
-  public String setKey() {
-    baseRedisService.setKey("key", "value");
-    return "Key set successfully";
-  }
+    @PostMapping("/set")
+    public void setKey(@RequestParam String key, @RequestParam String value) {
+        redisTemplate.opsForValue().set(key, value);
+    }
 
-  @PostMapping
-  public String test() {
-    return "Hello World";
-  }
-
+    @GetMapping("/get")
+    public String getKey(@RequestParam String key) {
+        return redisTemplate.opsForValue().get(key);
+    }
 }

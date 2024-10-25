@@ -1,7 +1,7 @@
 package com.nothing.itsmyproject.controller;
 
 import com.nothing.itsmyproject.entity.Products;
-import com.nothing.itsmyproject.service.impl.ProductsServiceImpl;
+import com.nothing.itsmyproject.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,12 +15,13 @@ import java.util.Optional;
 public class ProductsController {
 
   @Autowired
-  private ProductsServiceImpl productsService;
+  private ProductsService productsService;
 
   @GetMapping
   public List<Products> getAllProducts(@AuthenticationPrincipal String username) {
     // using username to get the authenticated user's details
     System.out.println("Authenticated user: " + username);
+
     return productsService.getAllProducts();
   }
 
@@ -37,6 +38,10 @@ public class ProductsController {
 
   @PostMapping
   public Products createProduct(@RequestBody Products product) {
+
+    // Tạo log khi thêm sản phẩm
+    System.out.println("Adding product: " + product.getProductName());
+
     return productsService.saveProduct(product);
   }
 

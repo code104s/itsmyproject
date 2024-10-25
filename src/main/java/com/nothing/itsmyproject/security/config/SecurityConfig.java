@@ -1,6 +1,8 @@
 package com.nothing.itsmyproject.security.config;
 
+import com.nothing.itsmyproject.security.jwt.AuthEntryPointJwt;
 import com.nothing.itsmyproject.security.jwt.filters.JwtRequestFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,32 +21,49 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Bean
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .authorizeRequests((authorizeRequests) ->
-                authorizeRequests
-                    .requestMatchers(
-                        "/api/auth/signin",
-                        "/api/auth/signup",
-                        "/api/products",
-                        "/api/products/**")
-                    .permitAll()
-                    .anyRequest().authenticated()
-            )
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(new JwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+  private AuthEntryPointJwt unauthorizedHandler;
+  private JwtRequestFilter jwtRequestFilter;
 
-    @Bean
-    public AuthenticationManager customAuthenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+  // setter
+  @Autowired
+  public void setUnauthorizedHandler(AuthEntryPointJwt unauthorizedHandler) {
+    this.unauthorizedHandler = unauthorizedHandler;
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Autowired
+  public void setJwtRequestFilter(JwtRequestFilter jwtRequestFilter) {
+    this.jwtRequestFilter = jwtRequestFilter;
+  }
+
+  @Bean
+  public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
+      throws Exception {
+    http
+        .authorizeRequests((authorizeRequests) ->
+            authorizeRequests
+                .requestMatchers(
+                    "/api/auth/signin",
+                    "/api/auth/signup")
+                .permitAll()
+                .anyRequest().authenticated()
+        )
+        .csrf(csrf -> csrf.disable())
+        .exceptionHandling(
+            exceptionHandling -> exceptionHandling.authenticationEntryPoint(unauthorizedHandler))
+        .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(
+            SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+  }
+
+  @Bean
+  public AuthenticationManager customAuthenticationManager(
+      AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }
