@@ -18,7 +18,7 @@ public class ProductsServiceImpl implements ProductsService {
   @Autowired
   private ProductRepository productRepository;
 
-  @Cacheable(value = "products")
+  @Cacheable(value = "products", key = "'allProducts'")
   public List<Products> getAllProducts() {
     List<Products> products = productRepository.findAll();
     System.out.println("Number of products fetched: " + products.size());
@@ -41,5 +41,10 @@ public class ProductsServiceImpl implements ProductsService {
   public void deleteProduct(Long id) {
     System.out.println("Deleting product by id..." + id);
     productRepository.deleteById(id);
+  }
+
+  @CacheEvict(value = "products", allEntries = true)
+  public void evictAllProductCache() {
+    System.out.println("Evicting all products from cache...");
   }
 }

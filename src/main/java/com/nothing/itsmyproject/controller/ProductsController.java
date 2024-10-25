@@ -22,7 +22,10 @@ public class ProductsController {
     // using username to get the authenticated user's details
     System.out.println("Authenticated user: " + username);
 
-    return productsService.getAllProducts();
+    List<Products> products = productsService.getAllProducts();
+    System.out.println("Number of products fetched: " + products.size());
+
+    return products;
   }
 
   // get product by id
