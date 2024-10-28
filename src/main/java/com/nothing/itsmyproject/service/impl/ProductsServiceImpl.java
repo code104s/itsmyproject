@@ -47,4 +47,17 @@ public class ProductsServiceImpl implements ProductsService {
   public void evictAllProductCache() {
     System.out.println("Evicting all products from cache...");
   }
+
+  @Override
+  public void incrementViewCount(Long productId) {
+    Optional<Products> productOpt = productRepository.findById(productId);
+    if (productOpt.isPresent()) {
+      Products product = productOpt.get();
+      product.setViewCount(product.getViewCount() + 1);
+      productRepository.save(product);
+      System.out.println("Add +1 view count for product: " + productId);
+    } else {
+      System.err.println("Product not found with id: " + productId);
+    }
+  }
 }

@@ -13,4 +13,7 @@ public interface ProductsService {
   Products saveProduct(Products product);
 
   void deleteProduct(Long id);
+
+  // Increment view count
+  void incrementViewCount(Long id);
 }

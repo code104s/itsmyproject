@@ -30,6 +30,9 @@ public class Products implements Serializable {
   @Column(name = "description")
   private String description;
 
+  @Column(name = "view_count", nullable = false)
+  private int viewCount = 0;
+
   // Getters and Setters
   public Long getProductId() {
     return productId;
@@ -69,5 +72,13 @@ public class Products implements Serializable {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public int getViewCount() {
+    return viewCount;
+  }
+
+  public void setViewCount(int viewCount) {
+    this.viewCount = viewCount;
   }
 }
