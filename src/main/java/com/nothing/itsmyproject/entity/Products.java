@@ -13,6 +13,9 @@ import java.io.Serializable;
 @Table(name = "products")
 public class Products implements Serializable {
 
+  // serialVersionUID để đảm bảo tính nhất quán giữa các phiên bản của class
+  private static final long serialVersionUID = -7522282854152387660L;
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "product_id")

@@ -1,6 +1,8 @@
 package com.nothing.itsmyproject.controller;
 
+import com.google.protobuf.util.JsonFormat;
 import com.nothing.itsmyproject.entity.User;
+import com.nothing.itsmyproject.grpc.GrpcClient;
 import com.nothing.itsmyproject.security.jwt.models.JwtResponse;
 import com.nothing.itsmyproject.service.CustomUserDetailService;
 import com.nothing.itsmyproject.security.jwt.utils.JwtUtils;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import com.nothing.itsmyproject.security.jwt.models.AuthenticationRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import search.Search;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -84,6 +87,18 @@ public class AuthController {
     return ResponseEntity.ok("User registered successfully");
   }
 
+  @PutMapping("/update")
+  public ResponseEntity<?> updateUser(@RequestBody User user) {
+    customUserDetailService.updateUser(user);
+    return ResponseEntity.ok("User updated successfully");
+  }
+
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+    customUserDetailService.deleteUser(id);
+    return ResponseEntity.ok("User deleted successfully");
+  }
+
   @PostMapping("/refresh-token")
   public ResponseEntity<?> refreshToken(@Valid @RequestBody String refreshToken) {
     if (jwtUtil.validateJwtToken(refreshToken)) {
@@ -101,6 +116,20 @@ public class AuthController {
               .collect(Collectors.toList())));
     } else {
       return ResponseEntity.badRequest().body("Invalid refresh token");
+    }
+  }
+
+  @Autowired
+  private GrpcClient grpcClient;
+
+  @GetMapping("/searchUsers")
+  public ResponseEntity<?> searchUsers(@RequestParam String query) {
+    try {
+      Search.SearchUserResponse response = grpcClient.grpcSearchUser(query);
+      String jsonResponse = JsonFormat.printer().print(response);
+      return ResponseEntity.ok(jsonResponse);
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
     }
   }
 }

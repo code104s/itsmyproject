@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package search;
+
+service SearchService {
+  rpc GrpcSearchUser (SearchUserRequest) returns (SearchUserResponse);
+  rpc GrpcSearchProduct (SearchProductRequest) returns (SearchProductResponse);
+}
+
+message SearchUserRequest {
+  string username = 1;
+}
+
+message SearchUserResponse {
+  repeated User users = 1;
+}
+
+message SearchProductRequest {
+  string productName = 1;
+}
+
+message SearchProductResponse {
+  repeated Product products = 1;
+}
+
+message User {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+message Product {
+  int32 id = 1;
+  string productName = 2;
+  string description = 3;
+  float productPrice = 4;
+  int32 productQuantity = 5;
+  int32 viewCount = 6;
+}

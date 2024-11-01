@@ -43,7 +43,10 @@ public class SecurityConfig {
             authorizeRequests
                 .requestMatchers(
                     "/api/auth/signin",
-                    "/api/auth/signup")
+                    "/api/auth/signup",
+                    "/api/products/incrementViewCount/**",
+                    "/api/products/searchProducts",
+                    "/api/auth/searchUsers")
                 .permitAll()
                 .anyRequest().authenticated()
         )
